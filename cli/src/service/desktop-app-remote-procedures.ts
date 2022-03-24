@@ -1,14 +1,14 @@
-import ipc from "node-ipc";
 import {
   RegisterClientResponse,
   StartDeviceAuthorizationResponse,
   VerificationResponse,
 } from "@noovolari/leapp-core/services/session/aws/aws-sso-role-service";
+import { INativeService } from "@noovolari/leapp-core/dist/interfaces/i-native-service";
 
 const connectionError = "unable to connect with desktop app";
 
 export class DesktopAppRemoteProcedures {
-  constructor(private serverId = "leapp_da") {}
+  constructor(private nativeService: INativeService, private serverId = "leapp_da") {}
 
   async isDesktopAppRunning(): Promise<boolean> {
     return this.remoteProcedureCall(
@@ -75,6 +75,7 @@ export class DesktopAppRemoteProcedures {
     onCallback: (data: any, resolve: (value: unknown) => void, reject: (reason?: any) => void) => void,
     onDisconnect: (resolve: (value: unknown) => void, reject: (reason?: any) => void) => void
   ): Promise<any> {
+    const ipc = this.nativeService.nodeIpc;
     ipc.config.id = "leapp_cli";
     ipc.config.maxRetries = 2;
     ipc.config.silent = true;
@@ -88,7 +89,7 @@ export class DesktopAppRemoteProcedures {
         desktopAppServer.on("disconnect", () => {
           onDisconnect(resolve, reject);
         });
-        desktopAppServer.on("message", (data) => {
+        desktopAppServer.on("message", (data: any) => {
           if (data.callbackId) {
             onCallback(data, resolve, reject);
           } else {

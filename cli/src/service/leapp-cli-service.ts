@@ -82,7 +82,7 @@ export class LeappCliService {
 
   public get desktopAppRemoteProcedures(): DesktopAppRemoteProcedures {
     if (!this.desktopAppRemoteProceduresInstance) {
-      this.desktopAppRemoteProceduresInstance = new DesktopAppRemoteProcedures();
+      this.desktopAppRemoteProceduresInstance = new DesktopAppRemoteProcedures(this.cliNativeService);
     }
 
     return this.desktopAppRemoteProceduresInstance;

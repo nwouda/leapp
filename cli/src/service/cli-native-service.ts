@@ -19,6 +19,7 @@ export class CliNativeService implements INativeService {
   httpProxyAgent: any;
   httpsProxyAgent: any;
   process: any;
+  nodeIpc: any;
 
   constructor() {
     this.fs = require("fs-extra");
@@ -28,6 +29,7 @@ export class CliNativeService implements INativeService {
     this.path = require("path");
     this.exec = require("child_process").exec;
     this.process = global.process;
+    this.nodeIpc = require("node-ipc");
     this.url = require("url");
     this.unzip = require("extract-zip");
     this.copydir = require("copy-dir");

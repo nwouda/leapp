@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
-import { ElectronService } from "./electron.service";
 import { LeappCoreService } from "./leapp-core.service";
-import { AwsAuthenticationService } from "./session/aws/aws-authentication.service";
-import { VerificationWindowService } from "./verification-window.service";
 import { integrationsFilter } from "../components/integration-bar/integration-bar.component";
+import { IAwsAuthenticationService } from "@noovolari/leapp-core/interfaces/i-aws-authentication.service";
+import { IVerificationWindowService } from "@noovolari/leapp-core/interfaces/i-verification-window.service";
+import { INativeService } from "@noovolari/leapp-core/dist/interfaces/i-native-service";
 
 @Injectable({
   providedIn: "root",
@@ -49,14 +49,14 @@ export class CliCommunicationService {
   };
 
   constructor(
-    private electronService: ElectronService,
+    private nativeService: INativeService,
     private leappCoreService: LeappCoreService,
-    private verificationWindowService: VerificationWindowService,
-    private awsAuthenticationService: AwsAuthenticationService
+    private verificationWindowService: IVerificationWindowService,
+    private awsAuthenticationService: IAwsAuthenticationService
   ) {}
 
   startServer(): void {
-    const ipc = this.electronService.nodeIpc;
+    const ipc = this.nativeService.nodeIpc;
     ipc.config.id = "leapp_da";
     ipc.serve(() => {
       ipc.server.on("message", (data, socket) => {

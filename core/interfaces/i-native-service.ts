@@ -17,4 +17,5 @@ export interface INativeService {
   httpProxyAgent: any;
   httpsProxyAgent: any;
   process: any;
+  nodeIpc: any;
 }
