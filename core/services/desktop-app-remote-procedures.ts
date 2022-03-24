@@ -1,9 +1,5 @@
-import {
-  RegisterClientResponse,
-  StartDeviceAuthorizationResponse,
-  VerificationResponse,
-} from "@noovolari/leapp-core/services/session/aws/aws-sso-role-service";
-import { INativeService } from "@noovolari/leapp-core/dist/interfaces/i-native-service";
+import { RegisterClientResponse, StartDeviceAuthorizationResponse, VerificationResponse } from "./session/aws/aws-sso-role-service";
+import { INativeService } from "../interfaces/i-native-service";
 
 const connectionError = "unable to connect with desktop app";
 

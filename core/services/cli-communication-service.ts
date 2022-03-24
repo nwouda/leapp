@@ -1,13 +1,9 @@
-import { Injectable } from "@angular/core";
-import { LeappCoreService } from "./leapp-core.service";
-import { integrationsFilter } from "../components/integration-bar/integration-bar.component";
-import { IAwsAuthenticationService } from "@noovolari/leapp-core/interfaces/i-aws-authentication.service";
-import { IVerificationWindowService } from "@noovolari/leapp-core/interfaces/i-verification-window.service";
-import { INativeService } from "@noovolari/leapp-core/dist/interfaces/i-native-service";
+import { IAwsAuthenticationService } from "../interfaces/i-aws-authentication.service";
+import { IVerificationWindowService } from "../interfaces/i-verification-window.service";
+import { INativeService } from "../interfaces/i-native-service";
+import { Repository } from "./repository";
+import { WorkspaceService } from "./workspace-service";
 
-@Injectable({
-  providedIn: "root",
-})
 export class CliCommunicationService {
   rpcMethods = {
     isDesktopAppRunning: (emitFunction, socket) => emitFunction(socket, "message", { result: true }),
@@ -29,8 +25,8 @@ export class CliCommunicationService {
         .catch((error) => emitFunction(socket, "message", { error })),
     refreshIntegrations: (emitFunction, socket) => {
       try {
-        this.leappCoreService.repository.reloadWorkspace();
-        integrationsFilter.next(this.leappCoreService.repository.listAwsSsoIntegrations());
+        this.repository.reloadWorkspace();
+        this.workspaceService.setIntegrations(this.repository.listAwsSsoIntegrations());
         emitFunction(socket, "message", {});
       } catch (error) {
         emitFunction(socket, "message", { error });
@@ -38,9 +34,9 @@ export class CliCommunicationService {
     },
     refreshSessions: (emitFunction, socket) => {
       try {
-        this.leappCoreService.repository.reloadWorkspace();
-        const sessions = this.leappCoreService.repository.getSessions();
-        this.leappCoreService.workspaceService.setSessions(sessions);
+        this.repository.reloadWorkspace();
+        const sessions = this.repository.getSessions();
+        this.workspaceService.setSessions(sessions);
         emitFunction(socket, "message", {});
       } catch (error) {
         emitFunction(socket, "message", { error });
@@ -50,14 +46,16 @@ export class CliCommunicationService {
 
   constructor(
     private nativeService: INativeService,
-    private leappCoreService: LeappCoreService,
     private verificationWindowService: IVerificationWindowService,
-    private awsAuthenticationService: IAwsAuthenticationService
+    private awsAuthenticationService: IAwsAuthenticationService,
+    private repository: Repository,
+    private workspaceService: WorkspaceService,
+    private serverId: string = "laepp_da"
   ) {}
 
   startServer(): void {
     const ipc = this.nativeService.nodeIpc;
-    ipc.config.id = "leapp_da";
+    ipc.config.id = this.serverId;
     ipc.serve(() => {
       ipc.server.on("message", (data, socket) => {
         const emitFunction = (...params) => ipc.server.emit(...params);

@@ -1,4 +1,5 @@
 import { BehaviorSubject, Observable } from "rxjs";
+import { AwsSsoIntegration } from "../models/aws-sso-integration";
 import { Repository } from "./repository";
 import { Session } from "../models/session";
 import { SessionStatus } from "../models/session-status";
@@ -9,6 +10,7 @@ import { ISessionNotifier } from "../interfaces/i-session-notifier";
 export class WorkspaceService implements ISessionNotifier {
   // Expose the observable$ part of the _sessions subject (read only stream)
   readonly sessions$: Observable<Session[]>;
+  readonly integrations$: Observable<AwsSsoIntegration[]>;
 
   // - We set the initial state in BehaviorSubject's constructor
   // - Nobody outside the Store should have access to the BehaviorSubject
@@ -17,10 +19,14 @@ export class WorkspaceService implements ISessionNotifier {
   // - Create one BehaviorSubject per store entity, for example if you have
   //   create a new BehaviorSubject for it, as well as the observable$, and getters/setters
   private readonly _sessions;
+  private readonly _integrations;
 
   constructor(private repository: Repository) {
     this._sessions = new BehaviorSubject<Session[]>([]);
+    this._integrations = new BehaviorSubject<AwsSsoIntegration[]>([]);
     this.sessions$ = this._sessions.asObservable();
+    this.integrations$ = this._integrations.asObservable();
+
     this.sessions = this.repository.getSessions();
   }
 
@@ -55,6 +61,14 @@ export class WorkspaceService implements ISessionNotifier {
 
   deleteSession(sessionId: string): void {
     this.sessions = this.sessions.filter((session) => session.sessionId !== sessionId);
+  }
+
+  getIntegrations(): AwsSsoIntegration[] {
+    return this._integrations.getValue();
+  }
+
+  setIntegrations(integrations: AwsSsoIntegration[]): void {
+    this._integrations.next(integrations);
   }
 
   listPending(): Session[] {

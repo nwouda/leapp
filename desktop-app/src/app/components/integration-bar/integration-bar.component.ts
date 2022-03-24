@@ -25,7 +25,6 @@ export interface SelectedIntegration {
   selected: boolean;
 }
 
-export const integrationsFilter = new BehaviorSubject<AwsSsoIntegration[]>([]);
 export const openIntegrationEvent = new BehaviorSubject<boolean>(false);
 export const syncAllEvent = new BehaviorSubject<boolean>(false);
 export const integrationHighlight = new BehaviorSubject<number>(-1);
@@ -89,14 +88,14 @@ export class IntegrationBarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subscription = integrationsFilter.subscribe(() => {
+    this.subscription = this.workspaceService.integrations$.subscribe(() => {
       this.setValues();
       this.selectedIntegrations = this.awsSsoConfigurations.map((awsIntegration) => ({
         id: awsIntegration.id,
         selected: false,
       }));
     });
-    integrationsFilter.next(this.repository.listAwsSsoIntegrations());
+    this.workspaceService.setIntegrations(this.repository.listAwsSsoIntegrations());
 
     this.subscription2 = openIntegrationEvent.subscribe((value) => {
       if (value) {
@@ -294,7 +293,7 @@ export class IntegrationBarComponent implements OnInit, OnDestroy {
         // eslint-disable-next-line max-len
         this.repository.updateAwsSsoIntegration(this.selectedAwsSsoConfiguration.id, alias, region, portalUrl, browserOpening);
       }
-      integrationsFilter.next(this.repository.listAwsSsoIntegrations());
+      this.workspaceService.setIntegrations(this.repository.listAwsSsoIntegrations());
       this.modalRef.hide();
     } else {
       this.messageToasterService.toast("Form is not valid", ToastLevel.warn, "Form validation");

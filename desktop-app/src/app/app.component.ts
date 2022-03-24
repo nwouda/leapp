@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { CliCommunicationService } from "@noovolari/leapp-core/services/cli-communication-service";
 import { environment } from "../environments/environment";
 import { AppService } from "./services/app.service";
 import { Router } from "@angular/router";
@@ -25,7 +26,6 @@ import { ElectronService } from "./services/electron.service";
 import { AwsSsoIntegrationService } from "@noovolari/leapp-core/services/aws-sso-integration-service";
 import { AwsSsoRoleService } from "@noovolari/leapp-core/services/session/aws/aws-sso-role-service";
 import { SessionStatus } from "@noovolari/leapp-core/models/session-status";
-import { CliCommunicationService } from "./services/cli-communication.service";
 
 @Component({
   selector: "app-root",
@@ -44,6 +44,7 @@ export class AppComponent implements OnInit {
   private rotationService: RotationService;
   private awsSsoIntegrationService: AwsSsoIntegrationService;
   private awsSsoRoleService: AwsSsoRoleService;
+  private cliCommunicationService: CliCommunicationService;
 
   /* Main app file: launches the Angular framework inside Electron app */
   constructor(
@@ -55,8 +56,7 @@ export class AppComponent implements OnInit {
     private router: Router,
     private updaterService: UpdaterService,
     private windowService: WindowService,
-    private electronService: ElectronService,
-    private cliCommunicationService: CliCommunicationService
+    private electronService: ElectronService
   ) {
     leappCoreService.mfaCodePrompter = mfaCodePrompter;
     leappCoreService.awsAuthenticationService = awsAuthenticationService;
@@ -75,6 +75,7 @@ export class AppComponent implements OnInit {
     this.rotationService = leappCoreService.rotationService;
     this.awsSsoIntegrationService = leappCoreService.awsSsoIntegrationService;
     this.awsSsoRoleService = leappCoreService.awsSsoRoleService;
+    this.cliCommunicationService = leappCoreService.cliCommunicationService;
 
     this.setInitialColorSchema();
     this.setColorSchemaChangeEventListener();

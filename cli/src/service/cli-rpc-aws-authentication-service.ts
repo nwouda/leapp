@@ -1,5 +1,5 @@
 import { IAwsAuthenticationService } from "@noovolari/leapp-core/interfaces/i-aws-authentication.service";
-import { DesktopAppRemoteProcedures } from "./desktop-app-remote-procedures";
+import { DesktopAppRemoteProcedures } from "@noovolari/leapp-core/services/desktop-app-remote-procedures";
 
 export class CliRpcAwsAuthenticationService implements IAwsAuthenticationService {
   constructor(private desktopAppRemoteProcedures: DesktopAppRemoteProcedures) {}

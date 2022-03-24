@@ -20,7 +20,7 @@ import { RotationService } from "@noovolari/leapp-core/services/rotation-service
 import { AzureCoreService } from "@noovolari/leapp-core/services/azure-core-service";
 import { CliMfaCodePromptService } from "./cli-mfa-code-prompt-service";
 import { CliNativeService } from "./cli-native-service";
-import { DesktopAppRemoteProcedures } from "./desktop-app-remote-procedures";
+import { DesktopAppRemoteProcedures } from "@noovolari/leapp-core/services/desktop-app-remote-procedures";
 import { constants } from "@noovolari/leapp-core/models/constants";
 import { NamedProfilesService } from "@noovolari/leapp-core/services/named-profiles-service";
 import { IdpUrlsService } from "@noovolari/leapp-core/services/idp-urls-service";

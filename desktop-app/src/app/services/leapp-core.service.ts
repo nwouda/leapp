@@ -1,5 +1,7 @@
 import { Injectable } from "@angular/core";
 import { AuthenticationService } from "@noovolari/leapp-core/services/authentication-service";
+import { CliCommunicationService } from "@noovolari/leapp-core/services/cli-communication-service";
+import { DesktopAppRemoteProcedures } from "@noovolari/leapp-core/services/desktop-app-remote-procedures";
 import { AwsIamUserService } from "@noovolari/leapp-core/services/session/aws/aws-iam-user-service";
 import { FileService } from "@noovolari/leapp-core/services/file-service";
 import { KeychainService } from "@noovolari/leapp-core/services/keychain-service";
@@ -62,6 +64,8 @@ export class LeappCoreService {
   private azureCoreServiceInstance: AzureCoreService;
   private webConsoleServiceInstance: WebConsoleService;
   private ssmServiceInstance: SsmService;
+  private cliCommunicationServiceInstance: CliCommunicationService;
+  private desktopAppRemoteProceduresInstance: DesktopAppRemoteProcedures;
 
   constructor(private electronService: ElectronService) {}
 
@@ -285,5 +289,25 @@ export class LeappCoreService {
       this.azureCoreServiceInstance = new AzureCoreService();
     }
     return this.azureCoreServiceInstance;
+  }
+
+  public get cliCommunicationService(): CliCommunicationService {
+    if (!this.cliCommunicationServiceInstance) {
+      this.cliCommunicationServiceInstance = new CliCommunicationService(
+        this.electronService,
+        this.verificationWindowService,
+        this.awsAuthenticationService,
+        this.repository,
+        this.workspaceService
+      );
+    }
+    return this.cliCommunicationServiceInstance;
+  }
+
+  public get desktopAppRemoteProcedures(): DesktopAppRemoteProcedures {
+    if (!this.desktopAppRemoteProceduresInstance) {
+      this.desktopAppRemoteProceduresInstance = new DesktopAppRemoteProcedures(this.electronService);
+    }
+    return this.desktopAppRemoteProceduresInstance;
   }
 }

@@ -4,7 +4,7 @@ import {
   StartDeviceAuthorizationResponse,
   VerificationResponse,
 } from "@noovolari/leapp-core/services/session/aws/aws-sso-role-service";
-import { DesktopAppRemoteProcedures } from "./desktop-app-remote-procedures";
+import { DesktopAppRemoteProcedures } from "@noovolari/leapp-core/services/desktop-app-remote-procedures";
 
 export class CliRpcVerificationWindowService implements IVerificationWindowService {
   constructor(private desktopAppRemoteProcedures: DesktopAppRemoteProcedures) {}

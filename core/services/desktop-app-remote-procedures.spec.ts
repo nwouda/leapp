@@ -1,11 +1,14 @@
 import { describe, test, expect } from "@jest/globals";
-import ipc from "node-ipc";
 import { DesktopAppRemoteProcedures } from "./desktop-app-remote-procedures";
+import ipc from "node-ipc";
 
 describe("DesktopAppRemoteProcedures", () => {
   test("isDesktopAppRunning", async () => {
+    const nativeService = {
+      nodeIpc: ipc,
+    };
     const testId = `rpc_test${Math.random() * 10000}`;
-    const desktopAppRemoteProcedures = new DesktopAppRemoteProcedures(testId);
+    const desktopAppRemoteProcedures = new DesktopAppRemoteProcedures(nativeService as any, testId);
 
     expect(await desktopAppRemoteProcedures.isDesktopAppRunning()).toBe(false);
 
